@@ -1,0 +1,33 @@
+ 
+$contrl scftyp=mcscf                                                
+runtyp=energy maxit=100
+icharg=1 mult=1
+fstint=.t. gencon=.t.
+exetyp=run
+$end
+
+$system timlim=99000 mwords=300
+nojac=1 kdiag=0 $end
+
+$smp csmtx=.t. call64=1 $end
+
+$moorth nostf=1 nozero=1 tole=0 tolz=0 $end
+
+$mcscf cistep=guga fullnr=.f. istate=1 acurcy=1.0e-8 engtol=1.0e-11
+soscf=.t. maxit=50 $end
+
+$trans dirtrf=.f. cuttrf=1.0e-10
+aoints=dist altpar=.t.
+mptran=2 mode=112 $end
+
+$drt nmcc=76 ndoc=6 nalp=0 nval=6 fors=.t. $end
+
+$gugdia nstate=3 itermx=100 cvgtol=1.0e-6 $end
+$gugdm2 cutoff=1.0e-11 wstate(1)=1,1,1 $end
+$gugem pack2=.t. cutoff=1.0e-11 $end
+
+$basis gbasis=n31 ngauss=6 ndfunc=1 npfunc=0
+diffsp=.f. diffs=.f. $end
+$guess guess=moread norb=88 $end
+!norder=1 iorder(81)=72 iorder(72)=81 $end
+
