@@ -1,0 +1,41 @@
+ 
+ $contrl icharg=1 scftyp=mcscf mplevl=2 inttyp=hondo icut=10 $end
+ 
+ $system mwords=300 masmem=268000000 timlim=100000 np=32 mklnp=1 $end
+ 
+ $moorth nostf=1 nozero=1 syms=1 symden=1 symvec=1 tole=0 tolz=0 $end
+ 
+ $smp smppar=.t. $end
+ 
+ $p2p p2p=.t. dlb=.t. $end
+ 
+ $BASIS extfile=.t. gbasis=cc-pVTZ $END
+ 
+ $guess guess=moread norb=88 $end
+ 
+ $trans altpar=1 mptran=2 dirtrf=.t. mode=112 cuttrf=1d-20 $end
+ 
+ $mcscf ntrack=2 cistep=aldet soscf=1 maxit=30 acurcy=1d-8 $end
+ 
+ $mcscf canonc=.t. igorb=1 $end
+ 
+ $det
+    ncore=76 nact=12 nels=12 nstate=3
+    wstate(1)=1,1,1 nstgss=20 cvgtol=1d-8
+    ispin=0
+ $end
+ 
+ $xmcqdpt
+    inorb=2
+    edshft=0.02 nstate=3
+    iforb(1)=-1,1,1
+    wstate(1)=1,1,1
+ $end
+
+ $contrl scftyp=mcscf
+ runtyp=energy maxit=100
+ icharg=1 mult=1
+ fstint=.t. gencon=.t.
+ exetyp=run
+ $end
+
