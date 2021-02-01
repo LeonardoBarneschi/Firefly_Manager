@@ -13,7 +13,6 @@ from subprocess import check_output
 from tkff2chg import tkff2chg
 from tk2xyz import tk2xyz 
 
-
 if not sys.warnoptions:
             warnings.simplefilter("ignore")
 
