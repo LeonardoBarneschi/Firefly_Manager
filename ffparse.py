@@ -7,6 +7,8 @@ import sys
 import numpy as np
 import pandas as pd
 
+# SLC
+
 def skiplines(openfile, nlines=0):
     '''Skips nlines + 1 lines in openfile. In other words, if nlines=0 it will
     go to the next line.'''
