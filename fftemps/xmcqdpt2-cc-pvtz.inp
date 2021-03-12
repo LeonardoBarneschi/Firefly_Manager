@@ -15,7 +15,7 @@
  
  $trans altpar=1 mptran=2 dirtrf=.t. mode=112 cuttrf=1d-20 $end
  
- $mcscf ntrack=2 cistep=aldet soscf=1 maxit=30 acurcy=1d-8 $end
+ $mcscf cistep=aldet soscf=1 maxit=30 acurcy=1d-8 $end
  
  $mcscf canonc=.t. igorb=1 $end
  

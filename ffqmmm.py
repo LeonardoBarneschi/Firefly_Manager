@@ -96,7 +96,8 @@ if __name__ == "__main__":
         key = keylst[0]
     
     # Quick input name generation.
-    inpname = tk.split('.')[0]+'.inp'
+    #inpname = tk.split('.')[0]+'.inp'
+    inpname = '.'.join(tk.split('.')[:-1])+'.inp'
 
     # Generate xyz qm coords for Firefly.
     qm = tk2xyz(tk, key)

@@ -57,7 +57,8 @@ def pandas_csv_to_txt(file_name, text):
             fn.write(to_write)
     else:
         raise('The file already exists and I am not allowed to overwrite it. Bye Bye.')
-        sys.exit(0)
+        pass
+        #sys.exit(0)
 
 def firefly_check_input(firefly_input):
     '''

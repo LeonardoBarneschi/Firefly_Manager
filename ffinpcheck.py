@@ -20,7 +20,7 @@ def txt_parse(txtfile, pattern1, pattern2):
     pattern1: upper bound line.
     pattern2: lower bound line.
 
-    :returns txtlines: a list of lists.
+    returns txtlines: a list of lists.
     '''
 
     rf = 0

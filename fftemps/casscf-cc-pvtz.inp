@@ -16,7 +16,7 @@
  $mcscf cistep=guga fullnr=.f. istate=1 acurcy=1.0e-8 engtol=1.0e-11
  soscf=.t. maxit=50 $end
  
- $trans dirtrf=.f. cuttrf=1.0e-10
+ $trans dirtrf=.t. cuttrf=1.0e-10
  aoints=dist altpar=.t.
  mptran=2 mode=112 $end
  

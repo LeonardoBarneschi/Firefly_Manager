@@ -6,8 +6,7 @@ import re
 import sys
 import numpy as np
 import pandas as pd
-
-# SLC
+import ff_get_dihedrals
 
 def skiplines(openfile, nlines=0):
     '''Skips nlines + 1 lines in openfile. In other words, if nlines=0 it will
@@ -21,7 +20,7 @@ def skiplines(openfile, nlines=0):
 def parse_firefly(ffout):
     '''
     ffout: str or path obj.
-       Firefly (PC GAMESS) output file.
+    Firefly (PC GAMESS) output file.
     '''
     casscf = []
     xmcqdpt2 = []
@@ -62,7 +61,10 @@ def parse_firefly(ffout):
     xmcqdpt2 = np.array(xmcqdpt2)
     charges= np.array(charges)
 
-    charges = charges.reshape(-1, casscf.shape[0], order='F')
+    try:
+        charges = charges.reshape(-1, casscf.shape[0], order='F')
+    except:
+        print(ffout)
 
     return casscf, xmcqdpt2, charges
 
@@ -73,12 +75,10 @@ def parsedconcat(casscf, xmcqdpt2, charges):
 
     k1 = [f'CASSCF S{i} (a.u.)' for i in range(roots)]
     k2 = [f'XMCQDPT2 S{i} (a.u.)' for i in range(roots)]
-    #k4 = [f'XMCQDPT2 S{i} CHARGE' for i in range(roots)]
     k3 = [f'XMCQDPT2 S{i} PSB CHARGE' for i in range(roots)]
 
     df1 = pd.DataFrame( [ dict(zip(k1, casscf)) ] )
     df2 = pd.DataFrame( [ dict(zip(k2, xmcqdpt2)) ] )
-    #df4 = pd.DataFrame( [ dict(zip(k4, charges.T)) ] )
     df3 = pd.DataFrame( [ dict(zip(k3, charges.T[:, idxs].sum(axis=1) )) ] )
 
     df = pd.concat( [df1, df2, df3 ], axis=1 )
@@ -89,16 +89,25 @@ if __name__ == "__main__":
 
     path = os.getcwd()
     paths = []
+    geoms = []
     for root, dirs, files in os.walk(path):
         for f in files:
             if f.endswith(".out"):
                  paths.append(os.path.join(root, f))
-
+            if f.endswith(".xyz"):
+                 geoms.append((ff_get_dihedrals.return_ret_bla(os.path.join(root, f))[0],
+                               ff_get_dihedrals.return_ret_tors(os.path.join(root, f), 'AT')))
     dfs = []
     for p in paths: 
-        dfs.append(parsedconcat(*parse_firefly(p)))
-   
+        try:
+            dfs.append(parsedconcat(*parse_firefly(p)))
+        except:
+            print(f'Error reading {p}')
+  
     dfparsed = pd.concat(dfs).reset_index(drop=True)
+    blas, diheds = zip(*geoms)
+    dfparsed[ "BLA" ] = np.array(blas)
+    dfparsed[ "Torsion" ] = np.array(diheds)
     dfparsed = dfparsed.sort_values( 'CASSCF S0 (a.u.)' )
   
     pattern = re.compile(r'CASSCF S\d{1}')
@@ -108,11 +117,9 @@ if __name__ == "__main__":
     k1 = [f'CASSCF S{i} (kcal)' for i in range(roots)]
     k2 = [f'XMCQDPT2 S{i} (kcal)' for i in range(roots)]
     df1 = (dfparsed.iloc[:, :roots] - dfparsed.iloc[:, 0].min()) * 627.509
-    df2 = (dfparsed.iloc[:, :roots] - dfparsed.iloc[:, 0].min()) * 627.509
+    df2 = (dfparsed.iloc[:, roots:roots*2] - dfparsed.iloc[:, roots].min()) * 627.509
     df1.columns = k1
     df2.columns = k2
-  
+ 
     df = pd.concat( [dfparsed, df1, df2], axis=1 )
     df.to_csv('parsed.csv', quoting=csv.QUOTE_NONNUMERIC)
-
-    print(df)
